@@ -8,16 +8,6 @@ from config import CHUNK_SIZE, CHUNK_OVERLAP
 
 
 def load_pdf(file_path: str | Path) -> List[Dict[str, Any]]:
-    """
-    Parse a PDF and return a list of page dicts.
-
-    Each dict:
-        {
-            "text": str,          # raw page text
-            "page_number": int,   # 1-indexed
-            "source": str,        # filename
-        }
-    """
     file_path = Path(file_path)
     if not file_path.exists():
         raise FileNotFoundError(f"PDF not found: {file_path}")
@@ -29,7 +19,7 @@ def load_pdf(file_path: str | Path) -> List[Dict[str, Any]]:
         text = page.extract_text() or ""
         text = text.strip()
 
-        if not text:          # skip blank/image-only pages
+        if not text:         
             continue
 
         pages.append({
@@ -49,18 +39,7 @@ def chunk_pages(
     pages: List[Dict[str, Any]],
     metadata: Dict[str, Any] = None,
 ) -> List[Dict[str, Any]]:
-    """
-    Split pages into overlapping chunks.
-
-    Each chunk dict:
-        {
-            "chunk_id": str,       # unique id (used as ChromaDB document id)
-            "text": str,           # chunk content
-            "page_number": int,
-            "source": str,
-            # ...anything in metadata (title, arxiv_id, authors, etc.)
-        }
-    """
+    
     metadata = metadata or {}
     chunks = []
 
@@ -78,11 +57,9 @@ def chunk_pages(
                     "text": chunk_text,
                     "page_number": page["page_number"],
                     "source": page["source"],
-                    **metadata,   # merges title, arxiv_id, authors if provided
+                    **metadata, 
                 }
                 chunks.append(chunk)
-
-            # move forward by (CHUNK_SIZE - CHUNK_OVERLAP) to create overlap
             start += CHUNK_SIZE - CHUNK_OVERLAP
 
     return chunks
@@ -92,18 +69,7 @@ def load_and_chunk(
     file_path: str | Path,
     metadata: Dict[str, Any] = None,
 ) -> List[Dict[str, Any]]:
-    """
-    Convenience wrapper: load PDF → chunk → return chunks.
-    This is the only function the rest of the app needs to call.
-
-    Args:
-        file_path: path to the PDF file
-        metadata:  optional dict — e.g. {"title": "Attention Is All You Need",
-                                          "arxiv_id": "1706.03762",
-                                          "authors": "Vaswani et al."}
-    Returns:
-        List of chunk dicts ready to be embedded and stored.
-    """
+   
     pages = load_pdf(file_path)
     chunks = chunk_pages(pages, metadata=metadata)
     return chunks
