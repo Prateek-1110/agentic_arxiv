@@ -30,6 +30,17 @@ const sessionDisplay = document.getElementById("sessionDisplay");
 const statusDot = document.getElementById("statusDot");
 const toast = document.getElementById("toast");
 
+const wakeOverlay =
+  document.getElementById("wakeOverlay");
+
+const wakeProgressBar =
+  document.getElementById("wakeProgressBar");
+
+const wakeTime =
+  document.getElementById("wakeTime");
+
+let wakeInterval = null;
+
 // ── Init ───────────────────────────────────────────────────
 (async function init() {
   await checkHealth();
@@ -316,18 +327,24 @@ async function sendQuery() {
 
   try {
 
-    const res = await fetch(`${API}/query/agent`, {
-      method: "POST",
+    const wakeTimeout = setTimeout(() => {
+  showWakeOverlay();
+}, 4000);
 
-      headers: {
-        "Content-Type": "application/json",
-      },
+const res = await fetch(`${API}/query/agent`, {
+  method: "POST",
+  headers: {
+    "Content-Type": "application/json",
+  },
+  body: JSON.stringify({
+    question,
+    session_id: sessionId,
+  }),
+});
 
-      body: JSON.stringify({
-        question,
-        session_id: sessionId,
-      }),
-    });
+clearTimeout(wakeTimeout);
+
+hideWakeOverlay();
 
     const data = await res.json();
 
@@ -505,7 +522,49 @@ function scrollToBottom() {
   chatMessages.scrollTop =
     chatMessages.scrollHeight;
 }
+function showWakeOverlay() {
 
+  wakeOverlay.classList.remove("hidden");
+
+  let seconds = 50;
+
+  wakeProgressBar.style.width = "0%";
+
+  wakeTime.textContent =
+    `${seconds}s remaining`;
+
+  clearInterval(wakeInterval);
+
+  wakeInterval = setInterval(() => {
+
+    seconds--;
+
+    const progress =
+      ((50 - seconds) / 50) * 100;
+
+    wakeProgressBar.style.width =
+      `${progress}%`;
+
+    wakeTime.textContent =
+      `${seconds}s remaining`;
+
+    if (seconds <= 0) {
+
+      clearInterval(wakeInterval);
+
+      wakeTime.textContent =
+        "Still starting...";
+    }
+
+  }, 1000);
+}
+
+function hideWakeOverlay() {
+
+  wakeOverlay.classList.add("hidden");
+
+  clearInterval(wakeInterval);
+}
 function escapeHTML(str = "") {
 
   return str

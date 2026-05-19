@@ -208,7 +208,33 @@
     class="toast"
     id="toast"
   ></div>
+<div class="wake-overlay hidden" id="wakeOverlay">
 
+  <div class="wake-card">
+
+    <div class="wake-spinner"></div>
+
+    <h2>Server is waking up...</h2>
+
+    <p>
+      The backend sleeps after inactivity.
+      This may take up to 50 seconds.
+    </p>
+
+    <div class="wake-progress">
+      <div
+        class="wake-progress-bar"
+        id="wakeProgressBar"
+      ></div>
+    </div>
+
+    <div class="wake-time" id="wakeTime">
+      50s remaining
+    </div>
+
+  </div>
+
+</div>
   <script src="app.js"></script>
 
 </body>
