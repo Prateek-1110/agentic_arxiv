@@ -1,83 +1,215 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Arxiv RAG</title>
-  <link rel="stylesheet" href="style.css" />
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
-  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
+<head>
+
+  <meta charset="UTF-8" />
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  />
+
+  <title>Arxiv RAG</title>
+
+  <link rel="stylesheet" href="style.css" />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+
+  <link
+    rel="preconnect"
+    href="https://fonts.gstatic.com"
+    crossorigin
+  />
+
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap"
+    rel="stylesheet"
+  />
+
 </head>
+
 <body>
 
   <div class="layout">
 
-    <!-- SIDEBAR -->
+    <!-- Sidebar -->
     <aside class="sidebar">
+
       <div class="sidebar-header">
-        <span class="logo">arxiv<span class="logo-accent">/rag</span></span>
-        <span class="status-dot" id="statusDot" title="Server status"></span>
+
+        <span class="logo">
+          arxiv<span class="logo-accent">/rag</span>
+        </span>
+
+        <span
+          class="status-dot"
+          id="statusDot"
+          title="Backend status"
+        ></span>
+
       </div>
 
-      <div class="sidebar-section">
-        <p class="section-label">INGEST PAPER</p>
+      <!-- Ingest -->
+      <section class="sidebar-section">
+
+        <p class="section-label">
+          INGEST PAPER
+        </p>
 
         <div class="input-row">
-          <input id="arxivInput" class="text-input" type="text" placeholder="ID or keyword  e.g. 1706.03762" />
-          <button class="btn-primary" id="ingestArxivBtn">Fetch</button>
+
+          <input
+            id="arxivInput"
+            class="text-input"
+            type="text"
+            placeholder="ID or keyword e.g. 1706.03762"
+            autocomplete="off"
+          />
+
+          <button
+            class="btn-primary"
+            id="ingestArxivBtn"
+          >
+            Fetch
+          </button>
+
         </div>
 
-        <div class="divider-label">or upload PDF</div>
+        <div class="divider-label">
+          or upload PDF
+        </div>
 
-        <label class="upload-zone" id="uploadZone">
-          <input type="file" id="pdfInput" accept=".pdf" hidden />
-          <span id="uploadLabel">Drop PDF or click</span>
+        <label
+          class="upload-zone"
+          id="uploadZone"
+        >
+
+          <input
+            type="file"
+            id="pdfInput"
+            accept=".pdf"
+            hidden
+          />
+
+          <span id="uploadLabel">
+            Drop PDF or click
+          </span>
+
         </label>
 
-        <button class="btn-secondary full-width" id="uploadBtn">Upload</button>
-      </div>
+        <button
+          class="btn-secondary full-width"
+          id="uploadBtn"
+        >
+          Upload
+        </button>
 
-      <div class="sidebar-section">
-        <p class="section-label">INGESTED PAPERS</p>
-        <div id="paperList" class="paper-list">
-          <span class="empty-hint">None yet.</span>
+      </section>
+
+      <!-- Papers -->
+      <section class="sidebar-section">
+
+        <p class="section-label">
+          INGESTED PAPERS
+        </p>
+
+        <div
+          id="paperList"
+          class="paper-list"
+        >
+
+          <span class="empty-hint">
+            None yet.
+          </span>
+
         </div>
-        <button class="btn-ghost full-width" id="refreshListBtn">↻ Refresh</button>
+
+        <button
+          class="btn-ghost full-width"
+          id="refreshListBtn"
+        >
+          ↻ Refresh
+        </button>
+
+      </section>
+
+      <!-- Footer -->
+      <div class="sidebar-footer">
+
+        <button
+          class="btn-ghost full-width"
+          id="newSessionBtn"
+        >
+          + New session
+        </button>
+
+        <p class="session-label">
+
+          Session:
+          <span id="sessionDisplay">—</span>
+
+        </p>
+
       </div>
 
-      <div class="sidebar-footer">
-        <button class="btn-ghost full-width" id="newSessionBtn">+ New session</button>
-        <p class="session-label">Session: <span id="sessionDisplay">—</span></p>
-      </div>
     </aside>
 
-    <!-- MAIN CHAT -->
+    <!-- Chat -->
     <main class="chat-area">
-      <div class="chat-messages" id="chatMessages">
+
+      <div
+        class="chat-messages"
+        id="chatMessages"
+      >
+
         <div class="welcome-msg">
-          <p class="welcome-title">Ask anything about your papers.</p>
-          <p class="welcome-sub">Ingest an Arxiv paper or upload a PDF, then start chatting.</p>
+
+          <p class="welcome-title">
+            Ask anything about your papers.
+          </p>
+
+          <p class="welcome-sub">
+            Ingest an Arxiv paper or upload a PDF,
+            then start chatting.
+          </p>
+
         </div>
+
       </div>
 
+      <!-- Input -->
       <div class="chat-input-bar">
+
         <textarea
           id="queryInput"
           class="query-textarea"
-          placeholder="Ask a question about your papers…"
+          placeholder="Ask a question about your papers..."
           rows="1"
+          spellcheck="false"
         ></textarea>
-        <button class="btn-send" id="sendBtn">↑</button>
+
+        <button
+          class="btn-send"
+          id="sendBtn"
+          aria-label="Send message"
+        >
+          ↑
+        </button>
+
       </div>
+
     </main>
 
   </div>
 
-  <div class="toast" id="toast"></div>
+  <!-- Toast -->
+  <div
+    class="toast"
+    id="toast"
+  ></div>
 
   <script src="app.js"></script>
+
 </body>
 </html>
