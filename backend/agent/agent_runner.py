@@ -8,13 +8,19 @@ from agent.tools.arxiv_tool import fetch_and_ingest_arxiv
 from agent.tools.summarize_tool import summarize_paper
 from memory.session_store import get_history, add_turn
 
+_gemini = None
 
-genai.configure(api_key=GEMINI_API_KEY)
-_gemini = genai.GenerativeModel(GEMINI_MODEL)
+
+def _get_gemini():
+    global _gemini
+    if _gemini is None:
+        genai.configure(api_key=GEMINI_API_KEY)
+        _gemini = genai.GenerativeModel(GEMINI_MODEL)
+    return _gemini
 
 
 def _llm(prompt: str) -> str:
-    response = _gemini.generate_content(prompt)
+    response = _get_gemini().generate_content(prompt)
     return response.text.strip()
 
 

@@ -24,7 +24,7 @@ def embed_texts(texts: List[str]) -> List[List[float]]:
     vectors = model.encode(
         texts,
         show_progress_bar=len(texts) > 20,  
-        convert_to_numpy=False,          
+        convert_to_numpy=True         
     )
 
     return [v.tolist() for v in vectors]

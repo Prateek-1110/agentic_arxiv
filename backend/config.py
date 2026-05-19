@@ -24,10 +24,10 @@ EMBEDDING_MODEL = os.getenv(
 EMBEDDING_DIMENSION = 384  # MiniLM-L6-v2 output dim
 
 # ── Reranker ──────────────────────────────────────────────────────────────────
-RERANKER_MODEL = os.getenv(
-    "RERANKER_MODEL", "cross-encoder/ms-marco-MiniLM-L-6-v2"
-)  # same cross-encoder from your notebook
-
+# RERANKER_MODEL = os.getenv(
+#     "RERANKER_MODEL", "cross-encoder/ms-marco-TinyBERT-L-2-v2"
+# )  # same cross-encoder from your notebook
+RERANKER_MODEL = None  # set to None for now since cross-encoder is slow and not critical for demo
 # ── ChromaDB ──────────────────────────────────────────────────────────────────
 CHROMA_COLLECTION_NAME = "arxiv_papers"
 
@@ -36,8 +36,8 @@ CHUNK_SIZE = 500        # characters per chunk (same as your notebook)
 CHUNK_OVERLAP = 100     # overlap between consecutive chunks
 
 # ── Retrieval ─────────────────────────────────────────────────────────────────
-TOP_K_RETRIEVAL = 10    # how many chunks to pull from vectorstore before reranking
-TOP_K_RERANKED = 4      # how many chunks to pass to LLM after reranking
+TOP_K_RETRIEVAL = 8     # how many chunks to pull from vectorstore before reranking
+TOP_K_RERANKED = 3      # how many chunks to pass to LLM after reranking
 
 # ── Arxiv ─────────────────────────────────────────────────────────────────────
 ARXIV_MAX_RESULTS = 3   # max papers fetched when agent searches Arxiv by keyword
@@ -48,8 +48,5 @@ MAX_HISTORY_TURNS = 10  # max conversation turns kept per session (older ones dr
 # ── FastAPI ───────────────────────────────────────────────────────────────────
 API_HOST = os.getenv("API_HOST", "0.0.0.0")
 API_PORT = int(os.getenv("API_PORT", 8000))
-ALLOWED_ORIGINS = os.getenv(
-    "ALLOWED_ORIGINS",
-    "http://localhost:5500,http://127.0.0.1:5500"
-)
+ALLOWED_ORIGINS = os.getenv("ALLOWED_ORIGINS", "http://localhost:5500").split(",")
 # ^ 5500 is Live Server default port in VS Code
