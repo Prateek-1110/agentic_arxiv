@@ -8,7 +8,9 @@ from config import CHROMA_DIR, CHROMA_COLLECTION_NAME, TOP_K_RETRIEVAL
 from ingestion.embedder import embed_texts, embed_query
 
 
-_client: chromadb.PersistentClient | None = None
+from typing import Any
+
+_client: Any = None
 _collection = None
 
 
