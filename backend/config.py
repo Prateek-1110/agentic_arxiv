@@ -48,5 +48,8 @@ MAX_HISTORY_TURNS = 10  # max conversation turns kept per session (older ones dr
 # ── FastAPI ───────────────────────────────────────────────────────────────────
 API_HOST = os.getenv("API_HOST", "0.0.0.0")
 API_PORT = int(os.getenv("PORT", 10000))
-ALLOWED_ORIGINS = os.getenv("ALLOWED_ORIGINS", "http://localhost:5500").split(",")
+ALLOWED_ORIGINS = os.getenv(
+    "ALLOWED_ORIGINS",
+    "https://agentic-arxiv.vercel.app"
+).split(",")
 # ^ 5500 is Live Server default port in VS Code
