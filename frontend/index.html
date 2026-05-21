@@ -1,255 +1,110 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-
   <meta charset="UTF-8" />
-
-  <meta
-    name="viewport"
-    content="width=device-width, initial-scale=1.0"
-  />
-
-  <title>Arxiv RAG</title>
-
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>arxiv/rag</title>
   <link rel="stylesheet" href="style.css" />
-
   <link rel="preconnect" href="https://fonts.googleapis.com" />
-
-  <link
-    rel="preconnect"
-    href="https://fonts.gstatic.com"
-    crossorigin
-  />
-
-  <link
-    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap"
-    rel="stylesheet"
-  />
-
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet" />
 </head>
-
 <body>
 
-  <div class="layout">
+  <!-- Top nav bar -->
+  <header class="topbar">
+    <div class="topbar-left">
+      <span class="logo">arxiv<span class="logo-accent">/rag</span></span>
+      <span class="status-dot" id="statusDot" title="Backend status"></span>
+    </div>
+    <div class="topbar-right">
+      <button class="btn-ghost sqr" id="newSessionBtn" title="New session">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12h14"/></svg>
+      </button>
+      <button class="btn-ghost sqr" id="ingestPanelBtn" title="Ingest papers">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+      </button>
+    </div>
+  </header>
 
-    <!-- Sidebar -->
-    <aside class="sidebar">
+  <!-- Ingest drawer (slides in from top on mobile, right panel on desktop) -->
+  <div class="ingest-overlay hidden" id="ingestOverlay"></div>
+  <aside class="ingest-panel hidden" id="ingestPanel">
+    <div class="panel-header">
+      <span class="panel-title">Ingest Papers</span>
+      <button class="btn-ghost sqr" id="closePanelBtn">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+    </div>
 
-     <div class="sidebar-header">
-
-  <div class="sidebar-brand">
-
-    <button
-      class="mobile-menu-btn"
-      id="mobileMenuBtn"
-      aria-label="Open menu"
-    >
-      ☰
-    </button>
-
-    <span class="logo">
-      arxiv<span class="logo-accent">/rag</span>
-    </span>
-
-  </div>
-
-  <span
-    class="status-dot"
-    id="statusDot"
-    title="Backend status"
-  ></span>
-
-</div>
-      <!-- Ingest -->
-      <section class="sidebar-section">
-
-        <p class="section-label">
-          INGEST PAPER
-        </p>
-
-        <div class="input-row">
-
-          <input
-            id="arxivInput"
-            class="text-input"
-            type="text"
-            placeholder="ID or keyword e.g. 1706.03762"
-            autocomplete="off"
-          />
-
-          <button
-            class="btn-primary"
-            id="ingestArxivBtn"
-          >
-            Fetch
-          </button>
-
-        </div>
-
-        <div class="divider-label">
-          or upload PDF
-        </div>
-
-        <label
-          class="upload-zone"
-          id="uploadZone"
-        >
-
-          <input
-            type="file"
-            id="pdfInput"
-            accept=".pdf"
-            hidden
-          />
-
-          <span id="uploadLabel">
-            Drop PDF or click
-          </span>
-
-        </label>
-
-        <button
-          class="btn-secondary full-width"
-          id="uploadBtn"
-        >
-          Upload
-        </button>
-
-      </section>
-
-      <!-- Papers -->
-      <section class="sidebar-section">
-
-        <p class="section-label">
-          INGESTED PAPERS
-        </p>
-
-        <div
-          id="paperList"
-          class="paper-list"
-        >
-
-          <span class="empty-hint">
-            None yet.
-          </span>
-
-        </div>
-
-        <button
-          class="btn-ghost full-width"
-          id="refreshListBtn"
-        >
-          ↻ Refresh
-        </button>
-
-      </section>
-
-      <!-- Footer -->
-      <div class="sidebar-footer">
-
-        <button
-          class="btn-ghost full-width"
-          id="newSessionBtn"
-        >
-          + New session
-        </button>
-
-        <p class="session-label">
-
-          Session:
-          <span id="sessionDisplay">—</span>
-
-        </p>
-
+    <div class="panel-body">
+      <!-- Arxiv fetch -->
+      <p class="section-label">ARXIV ID OR KEYWORD</p>
+      <div class="input-row">
+        <input id="arxivInput" class="text-input" type="text" placeholder="e.g. 1706.03762 or attention" autocomplete="off" />
+        <button class="btn-primary sqr" id="ingestArxivBtn">Fetch</button>
       </div>
 
-    </aside>
-<div
-  class="mobile-overlay"
-  id="mobileOverlay"
-></div>
-    <!-- Chat -->
-    <main class="chat-area">
+      <div class="divider-label">or upload PDF</div>
 
-      <div
-        class="chat-messages"
-        id="chatMessages"
-      >
+      <!-- PDF upload -->
+      <label class="upload-zone" id="uploadZone">
+        <input type="file" id="pdfInput" accept=".pdf" hidden />
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+        <span id="uploadLabel">Drop PDF or click</span>
+      </label>
+      <button class="btn-secondary sqr full-width" id="uploadBtn">Upload</button>
 
-        <div class="welcome-msg">
+      <!-- Papers list -->
+      <p class="section-label" style="margin-top:1.4rem">INGESTED PAPERS</p>
+      <div id="paperList" class="paper-list">
+        <span class="empty-hint">None yet.</span>
+      </div>
+      <button class="btn-ghost sqr full-width" id="refreshListBtn">↻ Refresh</button>
+    </div>
 
-          <p class="welcome-title">
-            Ask anything about your papers.
-          </p>
+    <div class="panel-footer">
+      <span class="session-label">Session: <span id="sessionDisplay">—</span></span>
+    </div>
+  </aside>
 
-          <p class="welcome-sub">
-            Ingest an Arxiv paper or upload a PDF,
-            then start chatting.
-          </p>
-
+  <!-- Chat -->
+  <main class="chat-area">
+    <div class="chat-messages" id="chatMessages">
+      <div class="welcome-msg">
+        <div class="welcome-icon">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 014 4v14a3 3 0 00-3-3H2z"/><path d="M22 3h-6a4 4 0 00-4 4v14a3 3 0 013-3h7z"/></svg>
         </div>
-
+        <p class="welcome-title">Ask anything about your papers.</p>
+        <p class="welcome-sub">Tap ↑ to ingest an Arxiv paper or upload a PDF, then start chatting.</p>
       </div>
+    </div>
 
-      <!-- Input -->
-      <div class="chat-input-bar">
-
-        <textarea
-          id="queryInput"
-          class="query-textarea"
-          placeholder="Ask a question about your papers..."
-          rows="1"
-          spellcheck="false"
-        ></textarea>
-
-        <button
-          class="btn-send"
-          id="sendBtn"
-          aria-label="Send message"
-        >
-          ↑
+    <!-- Input bar -->
+    <div class="chat-input-bar">
+      <div class="input-wrap">
+        <textarea id="queryInput" class="query-textarea" placeholder="Ask about your papers…" rows="1" spellcheck="false"></textarea>
+        <button class="btn-send" id="sendBtn" aria-label="Send">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/></svg>
         </button>
-
       </div>
-
-    </main>
-
-  </div>
+    </div>
+  </main>
 
   <!-- Toast -->
-  <div
-    class="toast"
-    id="toast"
-  ></div>
-<div class="wake-overlay hidden" id="wakeOverlay">
+  <div class="toast" id="toast"></div>
 
-  <div class="wake-card">
-
-    <div class="wake-spinner"></div>
-
-    <h2>Server is waking up...</h2>
-
-    <p>
-      The backend sleeps after inactivity.
-      This may take up to 50 seconds.
-    </p>
-
-    <div class="wake-progress">
-      <div
-        class="wake-progress-bar"
-        id="wakeProgressBar"
-      ></div>
+  <!-- Wake overlay -->
+  <div class="wake-overlay hidden" id="wakeOverlay">
+    <div class="wake-card">
+      <div class="wake-spinner"></div>
+      <h2>Waking backend…</h2>
+      <p>Server sleeps after inactivity. This may take up to 50 seconds.</p>
+      <div class="wake-progress"><div class="wake-progress-bar" id="wakeProgressBar"></div></div>
+      <div class="wake-time" id="wakeTime">50s remaining</div>
     </div>
-
-    <div class="wake-time" id="wakeTime">
-      50s remaining
-    </div>
-
   </div>
 
-</div>
   <script src="app.js"></script>
-
 </body>
 </html>
