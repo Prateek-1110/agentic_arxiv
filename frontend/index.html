@@ -36,20 +36,31 @@
     <!-- Sidebar -->
     <aside class="sidebar">
 
-      <div class="sidebar-header">
+     <div class="sidebar-header">
 
-        <span class="logo">
-          arxiv<span class="logo-accent">/rag</span>
-        </span>
+  <div class="sidebar-brand">
 
-        <span
-          class="status-dot"
-          id="statusDot"
-          title="Backend status"
-        ></span>
+    <button
+      class="mobile-menu-btn"
+      id="mobileMenuBtn"
+      aria-label="Open menu"
+    >
+      ☰
+    </button>
 
-      </div>
+    <span class="logo">
+      arxiv<span class="logo-accent">/rag</span>
+    </span>
 
+  </div>
+
+  <span
+    class="status-dot"
+    id="statusDot"
+    title="Backend status"
+  ></span>
+
+</div>
       <!-- Ingest -->
       <section class="sidebar-section">
 
@@ -154,7 +165,10 @@
       </div>
 
     </aside>
-
+<div
+  class="mobile-overlay"
+  id="mobileOverlay"
+></div>
     <!-- Chat -->
     <main class="chat-area">
 

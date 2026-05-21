@@ -29,6 +29,14 @@ const sessionDisplay = document.getElementById("sessionDisplay");
 
 const statusDot = document.getElementById("statusDot");
 const toast = document.getElementById("toast");
+const mobileMenuBtn =
+  document.getElementById("mobileMenuBtn");
+
+const sidebar =
+  document.querySelector(".sidebar");
+
+const mobileOverlay =
+  document.getElementById("mobileOverlay");
 
 const wakeOverlay =
   document.getElementById("wakeOverlay");
@@ -40,6 +48,36 @@ const wakeTime =
   document.getElementById("wakeTime");
 
 let wakeInterval = null;
+// ── Mobile Sidebar ─────────────────────────────
+function openMobileSidebar() {
+
+  sidebar.classList.add("mobile-open");
+
+  mobileOverlay.classList.add("show");
+}
+
+function closeMobileSidebar() {
+
+  sidebar.classList.remove("mobile-open");
+
+  mobileOverlay.classList.remove("show");
+}
+
+if (mobileMenuBtn) {
+
+  mobileMenuBtn.addEventListener(
+    "click",
+    openMobileSidebar
+  );
+}
+
+if (mobileOverlay) {
+
+  mobileOverlay.addEventListener(
+    "click",
+    closeMobileSidebar
+  );
+}
 
 // ── Init ───────────────────────────────────────────────────
 (async function init() {
